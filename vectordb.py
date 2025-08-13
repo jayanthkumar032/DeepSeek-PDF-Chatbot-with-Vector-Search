@@ -11,7 +11,7 @@ import os
 import queue
 import threading
 
-# ===== Config =====
+
 PDF_PATH = "Deep Learning with Python.pdf"
 PERSIST_DIR = "./chroma_store"
 LLM_MODEL = "deepseek-r1"
@@ -21,7 +21,7 @@ CHUNK_OVERLAP = 100
 RETRIEVAL_K = 3
 
 
-# ===== Streaming Callback =====
+
 class QueueCallbackHandler(BaseCallbackHandler):
     """Puts tokens into a queue for streaming to Gradio."""
     def __init__(self, token_queue: "queue.Queue"):
@@ -37,7 +37,6 @@ class QueueCallbackHandler(BaseCallbackHandler):
         self.token_queue.put(("error", str(error)))
 
 
-# ===== Embeddings & Vector DB =====
 embeddings = OllamaEmbeddings(model=EMBED_MODEL)
 
 loader = PyPDFLoader(PDF_PATH)
@@ -59,7 +58,6 @@ memory = ConversationBufferMemory(
 )
 
 
-# ===== Model Warm-up =====
 def warm_up_model():
     try:
         Ollama(model=LLM_MODEL).invoke("Hello!")
@@ -70,7 +68,7 @@ def warm_up_model():
 threading.Thread(target=warm_up_model, daemon=True).start()
 
 
-# ===== Chat Function =====
+
 def chat_with_pdf_stream(user_input, chat_history):
     if chat_history is None:
         chat_history = []
@@ -78,7 +76,7 @@ def chat_with_pdf_stream(user_input, chat_history):
     token_q = queue.Queue()
     handler = QueueCallbackHandler(token_q)
 
-    # ✅ New API: use callbacks instead of streaming=True + callback_manager
+    
     llm = Ollama(model=LLM_MODEL, callbacks=[handler])
 
     qa_chain = ConversationalRetrievalChain.from_llm(
@@ -132,7 +130,6 @@ Question: {user_input}
             break
 
 
-# ===== Gradio UI =====
 custom_css = """
 #chatbot {height: 600px; overflow-y: auto;}
 .message.user {
@@ -156,7 +153,7 @@ custom_css = """
 """
 
 with gr.Blocks(css=custom_css, theme=gr.themes.Soft()) as demo:
-    gr.Markdown("<h2 style='text-align:center'>🤖 Gemma2 PDF Chatbot — streaming answers</h2>")
+    gr.Markdown("<h2 style='text-align:center'>DeepSeek PDF Chatbot — streaming answers</h2>")
     chatbot = gr.Chatbot(elem_id="chatbot", height=600)
     msg = gr.Textbox(placeholder="Ask me anything from the PDF...", show_label=False)
     clear_btn = gr.Button("Clear Chat")
@@ -164,5 +161,5 @@ with gr.Blocks(css=custom_css, theme=gr.themes.Soft()) as demo:
     msg.submit(chat_with_pdf_stream, [msg, chatbot], [chatbot, msg])
     clear_btn.click(lambda: ([], ""), None, [chatbot, msg])
 
-print("🔁 Starting Gradio app — warming model in background.")
+print("Starting Gradio app — warming model in background.")
 demo.launch()
