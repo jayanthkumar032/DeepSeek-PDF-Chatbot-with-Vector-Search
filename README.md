@@ -22,4 +22,4 @@ This project is an **interactive PDF Q&A chatbot** that:
 - **Gradio** (User interface)
 - **Python** (Core implementation)
 
-## 📂 Project Structure
+
