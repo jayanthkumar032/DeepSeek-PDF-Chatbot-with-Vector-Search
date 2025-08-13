@@ -14,7 +14,7 @@ import threading
 # ===== Config =====
 PDF_PATH = "Deep Learning with Python.pdf"
 PERSIST_DIR = "./chroma_store"
-LLM_MODEL = "gemma2"
+LLM_MODEL = "deepseek-r1"
 EMBED_MODEL = "mxbai-embed-large"
 CHUNK_SIZE = 500
 CHUNK_OVERLAP = 100
