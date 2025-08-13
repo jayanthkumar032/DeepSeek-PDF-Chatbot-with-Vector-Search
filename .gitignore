@@ -1,0 +1,26 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual environment folders
+.env
+.venv
+env/
+venv/
+ENV/
+
+# Environment variables
+*.env
+
+# Gradio cache
+gradio_cached_examples/
+
+# Chroma DB store
+chroma_store/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
